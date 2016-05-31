@@ -2155,8 +2155,13 @@ as.data.frame.H2OFrame <- function(x, ...) {
                 '/3/DownloadDataset',
                 '?frame_id=', URLencode( h2o.getId(x)),
                 '&hex_string=', as.numeric(use_hex_string))
-
-  ttt <- getURL(url)
+                
+  if(is.null(conn@username)){
+    ttt <- getURL(url)
+  }else{
+    ttt <- getURL(url, userpwd=paste0(conn@username,':',conn@password), httpauth = 1L)
+  }
+  #ttt <- getURL(url)
   n <- nchar(ttt)
 
   # Delete last 1 or 2 characters if it's a newline.
