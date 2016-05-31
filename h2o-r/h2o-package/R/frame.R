@@ -2149,19 +2149,10 @@ as.data.frame.H2OFrame <- function(x, ...) {
   # Versions of R prior to 3.1 should not use hex string.
   # Versions of R including 3.1 and later should use hex string.
   use_hex_string <- getRversion() >= "3.1"
-  conn = h2o.getConnection()
-
-  url <- paste0('http://', conn@ip, ':', conn@port,
-                '/3/DownloadDataset',
-                '?frame_id=', URLencode( h2o.getId(x)),
-                '&hex_string=', as.numeric(use_hex_string))
-                
-  if(is.null(conn@username)){
-    ttt <- getURL(url)
-  }else{
-    ttt <- getURL(url, userpwd=paste0(conn@username,':',conn@password), httpauth = 1L)
-  }
-  #ttt <- getURL(url)
+ 
+  urlSuffix <- .h2o.__DOWNLOAD_FRAME(h2o.getId(x), use_hex_string)
+  ttt <- .h2o.doSafeGET(urlSuffix = urlSuffix)
+  
   n <- nchar(ttt)
 
   # Delete last 1 or 2 characters if it's a newline.
