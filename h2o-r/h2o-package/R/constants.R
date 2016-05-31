@@ -132,3 +132,9 @@ assign("LOG_FILE_NAME", NULL,  .pkg.env)
          url
     }
 }
+
+# Download Frame 
+.h2o.__DOWNLOAD_FRAME <- function(frame_id, use_hex_string) {
+  paste0('DownloadDataset?frame_id=', URLencode(frame_id), 
+         '&hex_string=', as.numeric(use_hex_string))
+}
